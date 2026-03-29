@@ -9,6 +9,7 @@
 | `CLAUDE.md` | 프로젝트 지침 템플릿 (모델 규칙, 코딩 규칙, 에이전트 규칙) |
 | `.gitignore` | Python/Node 범용 |
 | `.claude/settings.json` | 프로젝트 레벨 권한 설정 (bypassPermissions) |
+| `agents/example-agent.md` | 병렬 에이전트 템플릿 — 복사해서 역할별로 생성 |
 | `global-setup/settings.json` | 전역 설정 (context-bar, Stop 알림 훅) |
 | `global-setup/scripts/context-bar.sh` | 상태바 — 모델/브랜치/컨텍스트 사용량 표시 |
 | `global-setup/scripts/notify.ps1` | Claude 응답 완료 시 Windows 토스트 알림 |
@@ -45,7 +46,7 @@ chmod +x ~/.claude/scripts/context-bar.sh
 ### 3단계 — 프로젝트 커스터마이징
 
 1. `CLAUDE.md` 에서 `[프로젝트명]`, `[Language]` 등 플레이스홀더 수정
-2. `agents/` 폴더에 역할별 병렬 에이전트 추가
+2. `agents/example-agent.md`를 복사해서 역할별 에이전트 생성 (아래 참고)
 3. `docs/ref/todo-workflow.md` 작성 (TODO 워크플로우 규칙)
 
 ## 기능 설명
@@ -71,6 +72,27 @@ Claude Code가 응답을 완료할 때마다 Windows 알림 센터에 토스트 
 
 ### 에이전트 병렬 처리
 `agents/` 폴더에 역할별 에이전트 마크다운 파일을 추가하면, Plan 모드에서 설계 후 독립적인 작업을 병렬로 실행할 수 있습니다.
+
+**에이전트 셋팅 방법:**
+
+```bash
+# example-agent.md를 복사해서 역할별로 생성
+cp agents/example-agent.md agents/frontend.md
+cp agents/example-agent.md agents/backend.md
+cp agents/example-agent.md agents/db.md
+```
+
+각 파일에서 `name`, `description`, 담당 영역을 프로젝트에 맞게 수정합니다.
+
+`description`은 Claude가 "어떤 작업을 이 에이전트에 맡길지" 판단하는 기준이 되므로 구체적으로 작성하는 것이 중요합니다.
+
+```markdown
+---
+name: backend
+description: API 서버 병렬 서브태스크 에이전트. src/api/ 하위 라우터/컨트롤러/미들웨어 작업을 독립적으로 처리.
+model: sonnet
+---
+```
 
 ## 요구사항
 
