@@ -63,7 +63,9 @@ claude-sonnet-4-6 | 📁 my-project | 🔀 main (0 files uncommitted, synced 2m 
 `orange | blue | teal | green | lavender | rose | gold | slate | cyan`
 
 ### PC 토스트 알림 (Windows)
-Claude Code가 응답을 완료할 때마다 Windows 알림 센터에 토스트 알림이 표시됩니다.
+Claude Code 응답 완료 시 Windows 알림 + 효과음("띠링") 발생. 알림 클릭 시 Claude Code 창으로 자동 포커스 이동.
+
+세션이 **3분 이상** 진행된 경우에만 알림을 발생시켜 짧은 작업에서의 노이즈를 방지합니다.
 
 > Mac/Linux 사용자는 `global-setup/settings.json`의 `Stop` 훅 커맨드를 OS에 맞게 수정하세요.
 
