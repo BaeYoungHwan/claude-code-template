@@ -1,7 +1,7 @@
 {
   "statusLine": {
     "type": "command",
-    "command": "bash ~/.claude/scripts/context-bar.sh"
+    "command": "bash ~/.claude/hooks/context-bar.sh"
   },
   "autoUpdatesChannel": "latest",
   "skipDangerousModePermissionPrompt": true,
@@ -9,13 +9,30 @@
     "defaultMode": "bypassPermissions"
   },
   "model": "sonnet",
+  "env": {
+    "LANG": "en_US.UTF-8",
+    "LC_ALL": "en_US.UTF-8",
+    "PYTHONIOENCODING": "utf-8"
+  },
   "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File ~/.claude/hooks/session_start.ps1",
+            "async": true
+          }
+        ]
+      }
+    ],
     "Stop": [
       {
         "hooks": [
           {
             "type": "command",
-            "command": "powershell.exe -WindowStyle Hidden -ExecutionPolicy Bypass -File ~/.claude/scripts/notify.ps1"
+            "command": "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File ~/.claude/hooks/notify.ps1",
+            "async": true
           }
         ]
       }
