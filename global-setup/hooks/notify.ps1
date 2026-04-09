@@ -1,5 +1,7 @@
 ﻿# Claude Code Stop notify hook
-$input_json = $input | Out-String
+[Console]::InputEncoding  = [System.Text.Encoding]::UTF8
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+$input_json = [Console]::In.ReadToEnd()
 $session_id = $null
 $project_name = "Claude Code"
 try {
