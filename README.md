@@ -16,7 +16,7 @@
 | `tdd-enforcer.sh` | Write/Edit 전 | 구현 파일 생성 시 테스트 파일 존재 여부 강제 확인 |
 | `architecture-guard.sh` | Write/Edit 후 | 레이어 의존성 위반 감지 (경고) |
 | `circuit-breaker.sh` | Bash 실행 후 | 동일 에러 3회 반복 시 자동 중단 |
-| `session-replay.sh` | Bash 실행 후 | tool call 이벤트를 JSONL로 기록 (성능 분석) |
+| `session-replay.sh` | Bash/Write/Edit 실행 후 | tool call 이벤트를 JSONL로 기록 (성능 분석) |
 | `session-persist.sh` | 세션 종료 시 | git 상태를 `docs/ref/session-state.md`에 저장 |
 
 ### 슬래시 스킬 (`.claude/commands/`)
@@ -43,10 +43,12 @@
 ```
 docs/
 ├── ref/              # 필요할 때만 로드하는 참조 문서
+│   ├── session-state.md       # 세션 재시작 기준점 (자동 갱신)
 │   ├── todo-workflow.md       # [ ]→[🔄]→[x] 워크플로우
 │   ├── commit-convention.md   # 한국어 커밋 + Trailers
 │   ├── testing-patterns.md    # pass@k / pass^k
 │   ├── agent-model-routing.md # Haiku/Sonnet/Opus 라우팅
+│   ├── project-setup.md       # 새 프로젝트 시작 가이드
 │   ├── verification-protocol.md
 │   ├── PRD-template.md
 │   ├── architecture-template.md

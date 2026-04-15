@@ -47,10 +47,12 @@
 ## 에이전트 라우팅 규칙
 
 ```
-탐색 서브태스크 → subagent_type: haiku
-개발 서브태스크 → subagent_type: sonnet
-설계 서브태스크 → subagent_type: opus
+탐색 서브태스크 → model: haiku
+개발 서브태스크 → model: sonnet
+설계 서브태스크 → model: opus
 ```
+> `subagent_type`은 에이전트 역할("Explore", "Plan", "general-purpose")을 지정합니다.
+> 모델 선택은 별도의 `model:` 파라미터로 지정합니다.
 
 병렬 에이전트 사용 시 각 에이전트의 `.md` 파일에 `model:` 프런트매터 명시:
 

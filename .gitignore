@@ -18,7 +18,6 @@ venv/
 # Node
 node_modules/
 .next/
-dist/
 
 # 로그
 logs/

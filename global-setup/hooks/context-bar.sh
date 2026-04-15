@@ -23,6 +23,12 @@ esac
 
 input=$(cat)
 
+# jq 미설치 시 기본 상태바 출력 후 종료
+if ! command -v jq &>/dev/null; then
+  printf '%s\n' "${C_ACCENT}Claude${C_GRAY} | jq 미설치 — brew install jq 또는 choco install jq${C_RESET}"
+  exit 0
+fi
+
 # Extract model, directory, and cwd
 model=$(echo "$input" | jq -r '.model.display_name // .model.id // "?"')
 cwd=$(echo "$input" | jq -r '.cwd // empty')
@@ -35,7 +41,7 @@ if [[ -n "$cwd" && -d "$cwd" ]]; then
     branch=$(git -C "$cwd" branch --show-current 2>/dev/null)
     if [[ -n "$branch" ]]; then
         # Count uncommitted files
-        file_count=$(git -C "$cwd" --no-optional-locks status --porcelain -uall 2>/dev/null | wc -l | tr -d ' ')
+        file_count=$(git -C "$cwd" --no-optional-locks status --porcelain 2>/dev/null | wc -l | tr -d ' ')
 
         # Check sync status with upstream
         sync_status=""
@@ -86,7 +92,7 @@ if [[ -n "$cwd" && -d "$cwd" ]]; then
             git_status="(0 files uncommitted, ${sync_status})"
         elif [[ "$file_count" -eq 1 ]]; then
             # Show the actual filename when only one file is uncommitted
-            single_file=$(git -C "$cwd" --no-optional-locks status --porcelain -uall 2>/dev/null | head -1 | sed 's/^...//')
+            single_file=$(git -C "$cwd" --no-optional-locks status --porcelain 2>/dev/null | head -1 | sed 's/^...//')
             git_status="(${single_file} uncommitted, ${sync_status})"
         else
             git_status="(${file_count} files uncommitted, ${sync_status})"

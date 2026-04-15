@@ -17,7 +17,6 @@ from datetime import datetime
 
 # 상태 파일 경로 (스크립트 위치 기준 절대 경로)
 STATE_DIR = Path(__file__).parent / "logs"
-STATE_DIR.mkdir(exist_ok=True)
 
 
 def parse_plan(plan_path: str) -> list[dict]:
@@ -52,10 +51,14 @@ def get_state_file(plan_path: str) -> Path:
 
 def load_state(state_file: Path) -> dict:
     """이전 실행 상태 로드."""
-    if state_file.exists():
+    if not state_file.exists():
+        return {"tasks": {}}
+    try:
         with open(state_file, encoding="utf-8") as f:
             return json.load(f)
-    return {"tasks": {}}
+    except json.JSONDecodeError:
+        print(f"⚠️  상태 파일 손상 감지: {state_file} — 초기화합니다.", file=sys.stderr)
+        return {"tasks": {}}
 
 
 def save_state(state_file: Path, state: dict) -> None:
@@ -114,6 +117,13 @@ def main():
     parser.add_argument("--retry-failed", action="store_true", help="실패한 태스크만 재실행")
     args = parser.parse_args()
 
+    # 상태 디렉토리 초기화
+    try:
+        STATE_DIR.mkdir(exist_ok=True)
+    except OSError as e:
+        print(f"❌ 상태 디렉토리 생성 실패: {e}", file=sys.stderr)
+        sys.exit(1)
+
     # 계획 파싱
     tasks = parse_plan(args.plan)
     if not tasks:
@@ -134,13 +144,13 @@ def main():
         task_key = f"line_{task['line']}"
         prev_status = state["tasks"].get(task_key, {}).get("status")
 
-        # 재실행 모드: 성공한 것은 건너뜀
-        if args.retry_failed and prev_status == "done":
+        # 완료된 것은 항상 건너뜀
+        if prev_status == "done":
             results["skipped"] += 1
             continue
 
-        # 이미 성공한 것은 건너뜀 (일반 모드)
-        if not args.retry_failed and prev_status == "done":
+        # retry-failed 모드: 실패한 태스크만 재실행 (미실행 pending은 건너뜀)
+        if args.retry_failed and prev_status != "failed":
             results["skipped"] += 1
             continue
 
@@ -151,7 +161,10 @@ def main():
             "status": "done" if success else "failed",
             "timestamp": datetime.now().isoformat(),
         }
-        save_state(state_file, state)
+        try:
+            save_state(state_file, state)
+        except OSError as e:
+            print(f"   ⚠️  상태 저장 실패: {e}", file=sys.stderr)
 
         if success:
             results["done"] += 1
@@ -159,7 +172,11 @@ def main():
             results["failed"] += 1
             print(f"\n⚠️  실패한 태스크가 있습니다. 계속 진행합니까? (y/N): ", end="")
             if not args.dry_run:
-                answer = input().strip().lower()
+                try:
+                    answer = input().strip().lower()
+                except EOFError:
+                    print("중단됩니다.")
+                    break
                 if answer != "y":
                     print("중단됩니다.")
                     break

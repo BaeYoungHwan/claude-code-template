@@ -11,7 +11,10 @@ for _py in python3 python; do
     break
   fi
 done
-[ -z "$PYTHON_CMD" ] && exit 0
+if [ -z "$PYTHON_CMD" ]; then
+  echo "⚠️  [parse-json.sh] python3/python을 찾을 수 없습니다. 훅 JSON 파싱이 비활성화됩니다." >&2
+  return 0
+fi
 
 # tool_input의 특정 필드 추출
 # 인자: $1=JSON 문자열, $2=필드명

@@ -24,7 +24,7 @@ plan → exec → verify → fix → verify → ... → success
 
 ## 완료 기준 예시
 
-- "모든 테스트 pass^3"
+- "모든 테스트 pass^3" (3회 연속 통과 — `docs/ref/testing-patterns.md` 참조)
 - "타입 에러 0개"
 - "API 응답 200 확인"
 - "로컬 서버 정상 기동"

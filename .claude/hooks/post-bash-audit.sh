@@ -16,6 +16,11 @@ COMMAND=$(get_tool_input_field "$INPUT" "command")
 # logs/ 디렉토리 생성 (없으면)
 mkdir -p "$LOG_DIR"
 
+# 로그 로테이션: 5MB 초과 시 .1 백업으로 교체
+if [ -f "$LOG_FILE" ] && [ "$(wc -c < "$LOG_FILE")" -gt 5242880 ]; then
+  mv "$LOG_FILE" "${LOG_FILE}.1"
+fi
+
 # 타임스탬프 + 명령어 기록
 TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
 echo "[$TIMESTAMP] $COMMAND" >> "$LOG_FILE"

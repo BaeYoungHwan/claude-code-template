@@ -14,7 +14,7 @@
 ### 2. 레이어 경계 준수
 - 레이어 간 의존성 방향을 반드시 지킬 것
 - 자세한 규칙 → [`architecture-layers.md`](architecture-layers.md)
-- 위반 시 `architecture-guard.sh` 훅이 차단
+- 위반 시 `architecture-guard.sh` 훅이 경고 출력 (차단하지 않음)
 
 ### 3. 명명 일관성
 - 변수명, 함수명, 파일명: 영어 (camelCase / snake_case / kebab-case 프로젝트별 통일)

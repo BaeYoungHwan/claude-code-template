@@ -97,4 +97,4 @@ python executor.py --plan docs/exec-plans/active/phase-1-auth.md
 PRD의 "MVP 제외 사항"을 Claude가 읽으면:
 - `/init-project` 완료 후 자동 인식
 - `Directive:` Trailer로 커밋에 명시
-- `architecture-guard.sh`가 범위 외 코드 감지 (P3)
+- `architecture-guard.sh`가 레이어 의존성 위반 감지 (경고)

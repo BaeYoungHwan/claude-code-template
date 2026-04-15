@@ -10,6 +10,11 @@ REPLAY_LOG="$LOG_DIR/agent-replay.jsonl"
 
 mkdir -p "$LOG_DIR"
 
+# 로그 로테이션: 5MB 초과 시 .1 백업으로 교체
+if [ -f "$REPLAY_LOG" ] && [ "$(wc -c < "$REPLAY_LOG")" -gt 5242880 ]; then
+  mv "$REPLAY_LOG" "${REPLAY_LOG}.1"
+fi
+
 INPUT=$(cat)
 TIMESTAMP=$(date -u '+%Y-%m-%dT%H:%M:%SZ')
 

@@ -35,11 +35,6 @@
           {
             "type": "command",
             "command": "bash .claude/hooks/tdd-enforcer.sh"
-          },
-          {
-            "type": "command",
-            "command": "bash .claude/hooks/architecture-guard.sh",
-            "async": true
           }
         ]
       }
@@ -56,6 +51,21 @@
           {
             "type": "command",
             "command": "bash .claude/hooks/circuit-breaker.sh",
+            "async": true
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/session-replay.sh",
+            "async": true
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/architecture-guard.sh",
             "async": true
           },
           {
