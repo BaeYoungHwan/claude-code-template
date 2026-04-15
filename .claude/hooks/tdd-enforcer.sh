@@ -2,18 +2,10 @@
 # tdd-enforcer.sh — 구현 코드 작성 전 테스트 파일 존재 여부 확인
 # PreToolUse(Write/Edit) 훅
 
-INPUT=$(cat)
+source "$(dirname "$0")/lib/parse-json.sh"
 
-# 작성하려는 파일 경로 추출
-FILE_PATH=$(echo "$INPUT" | python3 -c "
-import sys, json
-try:
-    data = json.load(sys.stdin)
-    path = data.get('tool_input', {}).get('file_path', '')
-    print(path)
-except:
-    print('')
-" 2>/dev/null)
+INPUT=$(cat)
+FILE_PATH=$(get_tool_input_field "$INPUT" "file_path")
 
 [ -z "$FILE_PATH" ] && exit 0
 
@@ -67,6 +59,29 @@ if echo "$EXT" | grep -qE '^(ts|tsx|js|jsx)$'; then
   do
     [ -f "$pattern" ] && TEST_EXISTS=true && break
   done
+fi
+
+# Go 패턴 (*_test.go 규약)
+if [ "$EXT" = "go" ]; then
+  for pattern in \
+    "${DIRNAME}/${STEM}_test.go" \
+    "tests/${STEM}_test.go"
+  do
+    [ -f "$pattern" ] && TEST_EXISTS=true && break
+  done
+fi
+
+# Rust 패턴 (tests/ 디렉토리 또는 *_test.rs)
+if [ "$EXT" = "rs" ]; then
+  echo "$FILE_PATH" | grep -qE '/tests?/' && TEST_EXISTS=true
+  if [ "$TEST_EXISTS" = "false" ]; then
+    for pattern in \
+      "${DIRNAME}/${STEM}_test.rs" \
+      "tests/${STEM}.rs"
+    do
+      [ -f "$pattern" ] && TEST_EXISTS=true && break
+    done
+  fi
 fi
 
 if [ "$TEST_EXISTS" = "false" ]; then

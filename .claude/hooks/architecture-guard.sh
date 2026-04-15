@@ -2,19 +2,10 @@
 # architecture-guard.sh — 레이어 의존성 위반 감지
 # PostToolUse(Write/Edit) 훅: 구현 파일 작성 후 레이어 경계 위반 감지
 
-INPUT=$(cat)
+source "$(dirname "$0")/lib/parse-json.sh"
 
-# 작성된 파일 경로 추출
-FILE_PATH=$(echo "$INPUT" | python3 -c "
-import sys, json
-try:
-    data = json.load(sys.stdin)
-    # Write 또는 Edit 도구의 파일 경로
-    path = data.get('tool_input', {}).get('file_path', '')
-    print(path)
-except:
-    print('')
-" 2>/dev/null)
+INPUT=$(cat)
+FILE_PATH=$(get_tool_input_field "$INPUT" "file_path")
 
 [ -z "$FILE_PATH" ] && exit 0
 [ ! -f "$FILE_PATH" ] && exit 0

@@ -2,15 +2,10 @@
 # pre-bash-guard.sh — 위험한 Bash 명령 실행 전 차단
 # PreToolUse(Bash) 훅: exit 1이면 명령 실행 자체를 막음
 
+source "$(dirname "$0")/lib/parse-json.sh"
+
 INPUT=$(cat)
-COMMAND=$(echo "$INPUT" | python3 -c "
-import sys, json
-try:
-    data = json.load(sys.stdin)
-    print(data.get('tool_input', {}).get('command', ''))
-except:
-    print('')
-" 2>/dev/null)
+COMMAND=$(get_tool_input_field "$INPUT" "command")
 
 block() {
   local reason="$1"
@@ -41,7 +36,7 @@ if echo "$COMMAND" | grep -qE 'git\s+push\s+.*--force|git\s+push\s+-f\b'; then
 fi
 
 # 5. 재귀 삭제 차단
-if echo "$COMMAND" | grep -qE 'rm\s+-[a-z]*r[a-z]*f|rm\s+-[a-z]*f[a-z]*r'; then
+if echo "$COMMAND" | grep -iqE 'rm\s+-[a-zA-Z]*r[a-zA-Z]*f|rm\s+-[a-zA-Z]*f[a-zA-Z]*r'; then
   block "재귀 강제 삭제(rm -rf)는 차단됩니다."
 fi
 

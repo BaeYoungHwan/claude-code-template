@@ -3,6 +3,8 @@
 # PostToolUse 훅: audit.sh(보안)와 역할 분리
 # audit.sh → 보안/감사 목적, replay.sh → 에이전트 성능 분석 목적
 
+source "$(dirname "$0")/lib/parse-json.sh"
+
 LOG_DIR="$(cd "$(dirname "$0")/../.." && pwd)/logs"
 REPLAY_LOG="$LOG_DIR/agent-replay.jsonl"
 
@@ -12,7 +14,7 @@ INPUT=$(cat)
 TIMESTAMP=$(date -u '+%Y-%m-%dT%H:%M:%SZ')
 
 # 이벤트 파싱 후 JSONL 기록
-echo "$INPUT" | python3 -c "
+echo "$INPUT" | "$PYTHON_CMD" -c "
 import sys, json
 try:
     data = json.load(sys.stdin)

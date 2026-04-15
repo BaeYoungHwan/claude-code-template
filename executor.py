@@ -15,8 +15,8 @@ import re
 from pathlib import Path
 from datetime import datetime
 
-# 상태 파일 경로
-STATE_DIR = Path("logs")
+# 상태 파일 경로 (스크립트 위치 기준 절대 경로)
+STATE_DIR = Path(__file__).parent / "logs"
 STATE_DIR.mkdir(exist_ok=True)
 
 

@@ -2,6 +2,8 @@
 # circuit-breaker.sh — 동일 에러 반복 시 작업 중단
 # PostToolUse(Bash) 훅: audit과 역할 분리 (audit=보안, circuit-breaker=무한루프 방지)
 
+source "$(dirname "$0")/lib/parse-json.sh"
+
 LOG_DIR="$(cd "$(dirname "$0")/../.." && pwd)/logs"
 CB_LOG="$LOG_DIR/circuit-breaker.log"
 ERROR_HISTORY="$LOG_DIR/.cb-error-history"
@@ -10,16 +12,8 @@ MAX_REPEATS=3
 mkdir -p "$LOG_DIR"
 
 INPUT=$(cat)
-
-# 종료 코드 추출
-EXIT_CODE=$(echo "$INPUT" | python3 -c "
-import sys, json
-try:
-    data = json.load(sys.stdin)
-    print(data.get('tool_response', {}).get('exit_code', 0))
-except:
-    print(0)
-" 2>/dev/null)
+EXIT_CODE=$(get_response_field "$INPUT" "exit_code")
+EXIT_CODE="${EXIT_CODE:-0}"
 
 # 성공이면 에러 히스토리 초기화 후 종료
 if [ "$EXIT_CODE" = "0" ]; then
@@ -27,13 +21,12 @@ if [ "$EXIT_CODE" = "0" ]; then
   exit 0
 fi
 
-# 에러 출력 추출 (stderr)
-ERROR_OUTPUT=$(echo "$INPUT" | python3 -c "
+# 에러 출력 추출 (stderr, 첫 3줄만)
+ERROR_OUTPUT=$(echo "$INPUT" | "$PYTHON_CMD" -c "
 import sys, json
 try:
     data = json.load(sys.stdin)
     stderr = data.get('tool_response', {}).get('stderr', '')
-    # 첫 3줄만 (에러 핵심 부분)
     lines = stderr.strip().split('\n')[:3]
     print(' | '.join(lines))
 except:
