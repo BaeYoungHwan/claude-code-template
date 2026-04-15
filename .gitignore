@@ -23,6 +23,11 @@ dist/
 # 로그
 logs/
 *.log
+!logs/.gitkeep
+
+# 실행 계획 빈 폴더 유지
+!docs/exec-plans/active/.gitkeep
+!docs/exec-plans/completed/.gitkeep
 
 # IDE
 .vscode/
