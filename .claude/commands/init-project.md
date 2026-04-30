@@ -76,6 +76,25 @@
 
 ## Step 2 — 사용자가 양식을 제출하면
 
+### [필수] 프로젝트 규모 선택
+
+아래 표를 출력하고 번호를 입력받는다. **이 항목은 건너뛸 수 없다.**
+
+```
+=== 프로젝트 규모 선택 ===
+규모에 따라 Claude 훅(자동화 제약)이 설정됩니다.
+
+  1. 개인 (1인)       — 현재 기본 설정 유지
+  2. 스타트업 (2~10인) — + Lint·Test·Build 검사 (commit 전 자동 실행)
+  3. 회사 (10인+)     — + Lint·Test·Build + 장애 패턴 Deny List + PR Sub-Agent 리뷰
+
+번호를 입력하세요 (1 / 2 / 3):
+```
+
+사용자가 번호를 입력하면 내부 변수 `SCALE`에 저장한다 (1=개인, 2=스타트업, 3=회사).
+
+---
+
 1. 내용을 검토하고 **2~3가지 보완 질문**을 한다
    - MVP 제외 사항(8번)이 비어 있으면 반드시 물어볼 것
    - 비기능 요건(9번)이 "없음/미정"이면 서비스 규모를 재확인할 것
@@ -356,6 +375,76 @@
 
 ---
 
+### 3-6. 규모별 훅 설정 (.claude/settings.json 업데이트)
+
+`SCALE` 값에 따라 `.claude/settings.json`의 `hooks.PreToolUse` 배열을 수정한다.
+Read → Edit 방식으로 JSON을 직접 수정한다.
+
+**SCALE = 1 (개인):** settings.json 변경 없음.
+
+**SCALE = 2 (스타트업):** `hooks.PreToolUse`에 아래 항목 추가:
+
+```json
+{
+  "matcher": "Bash",
+  "hooks": [
+    {
+      "type": "command",
+      "command": "bash .claude/hooks/lint-test-build.sh"
+    }
+  ]
+}
+```
+
+**SCALE = 3 (회사):** 위 항목에 추가로 아래 2개도 추가:
+
+```json
+{
+  "matcher": "Bash",
+  "hooks": [
+    {
+      "type": "command",
+      "command": "bash .claude/hooks/deny-list-guard.sh"
+    }
+  ]
+},
+{
+  "matcher": "Bash",
+  "hooks": [
+    {
+      "type": "command",
+      "command": "bash .claude/hooks/sub-agent-review.sh"
+    }
+  ]
+}
+```
+
+**SCALE = 2, 3 공통 — permissions.deny에 main 직접 푸시 차단 추가:**
+
+`settings.json`의 `permissions.deny` 배열에 아래 항목을 추가한다 (이미 있으면 스킵):
+
+```json
+"Bash(git push origin main)",
+"Bash(git push origin master)"
+```
+
+**SCALE = 3 — 엄격 모드 플래그 생성 및 architecture-guard 동기화:**
+
+1. `.claude/hooks-strict.flag` 빈 파일 생성:
+   - 이 파일이 존재하면 `architecture-guard.sh`가 위반 시 실제로 차단(exit 1)하고,
+     `tdd-enforcer.sh`가 기존 파일 수정 시에도 테스트 파일 존재를 확인한다.
+
+2. `settings.json`에서 `architecture-guard.sh` 훅 항목의 `"async": true`를 제거:
+   - async 상태에서는 exit code가 무시되어 차단이 불가능하므로 동기로 전환한다.
+   - 변경 전: `{ "type": "command", "command": "bash .claude/hooks/architecture-guard.sh", "async": true }`
+   - 변경 후: `{ "type": "command", "command": "bash .claude/hooks/architecture-guard.sh" }`
+
+추가 안내:
+- SCALE 3 선택 시: `.claude/deny-patterns.json` 파일에 팀 고유 장애 패턴을 등록하도록 안내한다.
+- 이미 동일한 훅이 등록되어 있으면 중복 추가하지 않는다.
+
+---
+
 ## Step 4 — 생성 완료 후 안내
 
 산출물 생성 후 아래 메시지를 출력한다:
@@ -369,6 +458,18 @@
   - docs/product-specs/PRD-v1.md
   - docs/design-docs/ARD-v1.md
   - docs/design-docs/architecture-v1.md
+
+활성화된 훅 (규모: [선택한 규모]):
+  [SCALE=1] 기본 훅만 유지 (TDD 강제, 보안 가드 등)
+  [SCALE=2] + Lint·Test·Build / main 직접 푸시 차단
+  [SCALE=3] + Lint·Test·Build / main 직접 푸시 차단
+           + Deny List / Sub-Agent PR Review
+           + 아키텍처 위반 차단 (엄격 모드)
+           + TDD — 기존 파일 수정 시에도 테스트 확인
+
+[SCALE=3인 경우에만 출력]
+  ⚠️  장애 패턴 Deny List를 팀 상황에 맞게 등록하세요:
+      .claude/deny-patterns.json
 
 다음 단계:
   1. docs/design-docs/architecture-v1.md 검토 → 방향 수정이 있으면 알려주세요

@@ -10,6 +10,8 @@ FILE_PATH=$(get_tool_input_field "$INPUT" "file_path")
 [ -z "$FILE_PATH" ] && exit 0
 [ ! -f "$FILE_PATH" ] && exit 0
 
+STRICT_FLAG="$(git rev-parse --show-toplevel 2>/dev/null || pwd)/.claude/hooks-strict.flag"
+
 # 소스 파일만 체크 (Python, TypeScript, JavaScript)
 if ! echo "$FILE_PATH" | grep -qiE '\.(py|ts|tsx|js|jsx)$'; then
   exit 0
@@ -44,6 +46,13 @@ FILE_CONTENT=$(cat "$FILE_PATH" 2>/dev/null)
 
 warn() {
   local msg="$1"
+  if [ -f "$STRICT_FLAG" ]; then
+    echo "🚫 [아키텍처 차단] $msg" >&2
+    echo "   파일: $FILE_PATH (레이어: $CURRENT_LAYER)" >&2
+    echo "   규칙: docs/design-docs/architecture-layers.md 참조" >&2
+    echo "   엄격 모드: 레이어 위반은 허용되지 않습니다. (.claude/hooks-strict.flag)" >&2
+    exit 1
+  fi
   echo "⚠️  [아키텍처 경고] $msg" >&2
   echo "   파일: $FILE_PATH (레이어: $CURRENT_LAYER)" >&2
   echo "   규칙: docs/design-docs/architecture-layers.md 참조" >&2

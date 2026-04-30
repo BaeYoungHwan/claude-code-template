@@ -29,8 +29,10 @@ DIRNAME=$(dirname "$FILE_PATH")
 STEM="${BASENAME%.*}"
 EXT="${BASENAME##*.}"
 
-# 이미 존재하는 파일 수정이면 패스 (신규 생성만 체크)
-if [ -f "$FILE_PATH" ]; then
+STRICT_FLAG="$(git rev-parse --show-toplevel 2>/dev/null || pwd)/.claude/hooks-strict.flag"
+
+# 엄격 모드가 아니면 기존 파일 수정은 패스 (신규 생성만 체크)
+if [ -f "$FILE_PATH" ] && [ ! -f "$STRICT_FLAG" ]; then
   exit 0
 fi
 
