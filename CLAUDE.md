@@ -9,6 +9,7 @@
 - 코드·변수명: **영어** / 주석·커밋·소통: **한국어**
 - 민감정보(API 키 등): `.env` 관리, 절대 커밋 금지
 - CLAUDE.md는 핵심 규칙만 유지 — 특정 상황 규칙은 `docs/ref/`에 배치
+- AI 행동 원칙 (코딩 전 사고, 단순함, 수술적 변경, 목표 중심) → [`docs/ref/behavioral-principles.md`](docs/ref/behavioral-principles.md)
 
 ---
 
@@ -79,6 +80,8 @@
 │   ├── settings.json          # 권한 + 훅 등록
 │   ├── hooks/                 # 보안·감사·세션 훅
 │   └── commands/              # 슬래시 스킬
+├── .claude-plugin/            # 마켓플레이스 플러그인 메타데이터
+├── skills/                    # 마켓플레이스 배포용 스킬
 ├── agents/                    # 병렬 에이전트
 ├── docs/
 │   ├── ref/                   # 참조 문서 (필요할 때만 로드)

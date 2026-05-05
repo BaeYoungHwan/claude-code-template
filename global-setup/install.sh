@@ -20,8 +20,15 @@ echo "[1/3] Hook 파일 복사 중..."
 cp "$SCRIPT_DIR/hooks/context-bar.sh" "$HOOKS_DIR/context-bar.sh"
 cp "$SCRIPT_DIR/hooks/notify.ps1"     "$HOOKS_DIR/notify.ps1"
 cp "$SCRIPT_DIR/hooks/session_start.ps1" "$HOOKS_DIR/session_start.ps1"
+cp "$SCRIPT_DIR/voice/start_voice.ps1"   "$HOOKS_DIR/start_voice.ps1"
 chmod +x "$HOOKS_DIR/context-bar.sh"
-echo "  ✓ context-bar.sh, notify.ps1, session_start.ps1 → $HOOKS_DIR/"
+echo "  ✓ context-bar.sh, notify.ps1, session_start.ps1, start_voice.ps1 → $HOOKS_DIR/"
+
+# voice_input.py 전역 설치 (~/.claude/voice/)
+mkdir -p "$CLAUDE_DIR/voice"
+cp "$SCRIPT_DIR/voice/voice_input.py"   "$CLAUDE_DIR/voice/voice_input.py"
+cp "$SCRIPT_DIR/voice/requirements.txt" "$CLAUDE_DIR/voice/requirements.txt"
+echo "  ✓ voice_input.py, requirements.txt → $CLAUDE_DIR/voice/"
 
 # 3. settings.json 안내
 echo ""
@@ -35,7 +42,7 @@ echo "    cp \"$SCRIPT_DIR/settings.json\" \"$CLAUDE_DIR/settings.json\""
 # 4. 확인
 echo ""
 echo "[3/3] 설치 결과"
-for f in context-bar.sh notify.ps1 session_start.ps1; do
+for f in context-bar.sh notify.ps1 session_start.ps1 start_voice.ps1; do
     if [[ -f "$HOOKS_DIR/$f" ]]; then
         echo "  ✓ $HOOKS_DIR/$f"
     else
@@ -47,3 +54,7 @@ echo ""
 echo "=== 설치 완료 ==="
 echo "  상태바 활성화: Claude Code를 재시작하면 적용됩니다."
 echo "  완료 알림: 세션 종료 시 Windows 토스트 알림이 표시됩니다."
+echo ""
+echo "[선택] 보이스 입력 설치 (OpenAI Whisper API 기반)"
+echo "  powershell -ExecutionPolicy Bypass -File global-setup/voice/install_voice.ps1"
+echo "  자세한 안내: global-setup/voice/README.md"
