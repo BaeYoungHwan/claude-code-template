@@ -113,9 +113,10 @@ def _write_wav(path: str, audio_data: np.ndarray) -> None:
 
 
 class VoiceRecorder:
-    def __init__(self, lang: str = "ko-KR", tray: Optional[pystray.Icon] = None):
+    def __init__(self, lang: str = "ko-KR", tray: Optional[pystray.Icon] = None, device: Optional[str] = None):
         self.lang = lang
         self.tray = tray
+        self.device = device
         self.recording = False
         self._frames: list[np.ndarray] = []
         self._sample_count = 0
@@ -158,6 +159,7 @@ class VoiceRecorder:
             channels=CHANNELS,
             dtype="int16",
             callback=self._audio_callback,
+            device=self.device,
         )
         self._stream.start()
         beep(800, 200)
@@ -252,7 +254,18 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Voice input daemon for Claude Code")
     parser.add_argument("--hotkey", default="ctrl+shift+space", help="토글 단축키 (기본: ctrl+shift+space)")
     parser.add_argument("--lang", default="ko-KR", help="전사 언어 (기본: ko-KR)")
+    parser.add_argument("--device", default=None, help="입력 장치 이름 또는 인덱스 (기본: 시스템 기본값). --list-devices로 목록 확인")
+    parser.add_argument("--list-devices", action="store_true", help="사용 가능한 입력 장치 목록 출력 후 종료")
     args = parser.parse_args()
+
+    if args.list_devices:
+        import sounddevice as _sd
+        print("=== 사용 가능한 입력 장치 ===")
+        for i, d in enumerate(_sd.query_devices()):
+            if d["max_input_channels"] > 0:
+                marker = " ← 기본값" if _sd.query_devices(kind="input")["name"] == d["name"] else ""
+                print(f"  {i}: {d['name']}{marker}")
+        return
 
     stop_event = threading.Event()
     tray = pystray.Icon(
@@ -263,7 +276,8 @@ def main() -> None:
             pystray.MenuItem("종료", lambda icon, item: (stop_event.set(), icon.stop()))
         ),
     )
-    recorder = VoiceRecorder(lang=args.lang, tray=tray)
+    device = int(args.device) if args.device and args.device.isdigit() else args.device
+    recorder = VoiceRecorder(lang=args.lang, tray=tray, device=device)
 
     def setup(icon: pystray.Icon) -> None:
         icon.visible = True
