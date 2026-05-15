@@ -179,17 +179,8 @@ else
     ctx="${bar} ${C_GRAY}~${pct}% of ${max_display} tokens"
 fi
 
-# Voice state: 🎤 idle / 🔴 recording
-voice_seg=""
-_vs_file="$HOME/.claude/voice/state"
-if [[ -f "$_vs_file" ]]; then
-    _vs=$(tr -d '\r' < "$_vs_file" 2>/dev/null)
-    [[ "$_vs" == "recording" ]] && voice_seg=" | 🔴 REC"
-    [[ "$_vs" == "idle"      ]] && voice_seg=" | 🎤"
-fi
-
-# Build output: Model | Dir | Voice | Branch (uncommitted) | Context
-output="${C_ACCENT}${model}${C_GRAY} | 📁 ${dir}${voice_seg}"
+# Build output: Model | Dir | Branch (uncommitted) | Context
+output="${C_ACCENT}${model}${C_GRAY} | 📁 ${dir}"
 [[ -n "$branch" ]] && output+=" | 🔀 ${branch} ${git_status}"
 output+=" | ${ctx}${C_RESET}"
 

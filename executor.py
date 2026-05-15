@@ -84,7 +84,7 @@ def run_task(task: dict, dry_run: bool = False) -> bool:
             ["claude", "-p", prompt],
             capture_output=True,
             text=True,
-            timeout=300,  # 5분 타임아웃
+            timeout=args.timeout,
             encoding="utf-8",
         )
 
@@ -115,6 +115,7 @@ def main():
     parser.add_argument("--plan", required=True, help="실행 계획 파일 경로")
     parser.add_argument("--dry-run", action="store_true", help="실제 실행 없이 계획만 출력")
     parser.add_argument("--retry-failed", action="store_true", help="실패한 태스크만 재실행")
+    parser.add_argument("--timeout", type=int, default=300, help="태스크당 타임아웃 초 (기본값: 300)")
     args = parser.parse_args()
 
     # 상태 디렉토리 초기화
