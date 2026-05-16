@@ -327,6 +327,38 @@ SMTP 포트 (예: 587):
 
 ---
 
+### [AI-Readiness] AI 활용도 측정 설정
+
+아래 질문을 출력한다:
+
+```
+=== [AI-Readiness] AI 활용도 측정 ===
+이 프로젝트에서 AI 활용도(AI-Readiness)를 주기적으로 측정하시겠습니까?
+/ai-readiness-cartography 스킬로 점수화·시각화합니다.
+
+1. 활성화 (권장)
+2. 건너뜀
+
+번호를 입력하세요 (1 / 2):
+```
+
+`1` 선택 시 측정 주기를 추가로 입력받는다:
+
+```
+측정 주기를 선택하세요:
+1. 주 1회 (매주 월요일)
+2. 월 1회 (매월 1일)
+
+번호를 입력하세요 (1 / 2):
+```
+
+답변을 내부 변수 `AI_READINESS_ACTIVE`, `AI_READINESS_CYCLE`에 저장한다 (1=주 1회, 2=월 1회).
+
+> **참고:** git 커밋이 30일 이상 없으면 스케줄이 자동 일시정지됩니다.
+> Step 4 완료 메시지에서 `/schedule` 등록 방법을 안내합니다.
+
+---
+
 ## Step 3 — 산출물 5종 생성
 
 ### 3-1. CLAUDE.md 갱신
@@ -869,6 +901,12 @@ docs/ref/session-state.md
 [SCALE=3인 경우에만 출력]
   ⚠️  팀 고유 차단 패턴이 있으면 아래 파일에 섹션을 추가하세요:
       .claude/hooks/pre-bash-guard.sh
+  [AI_READINESS_ACTIVE=1]
+  AI-Readiness 주기 측정이 활성화되었습니다.
+  /schedule 로 등록하세요:
+    - 주 1회: /schedule weekly /ai-readiness-cartography
+    - 월 1회: /schedule monthly /ai-readiness-cartography
+  git 커밋이 30일 이상 없으면 스케줄이 자동 일시정지됩니다.
 
 다음 단계:
   1. docs/design-docs/architecture-v1.md 검토 → 방향 수정이 있으면 알려주세요
