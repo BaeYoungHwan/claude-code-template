@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 send_notification.py -- 하네스 이메일 알림 발송 유틸리티
 
@@ -11,6 +11,7 @@ send_notification.py -- 하네스 이메일 알림 발송 유틸리티
 
 환경변수 (.env에서 자동 로드):
   SMTP_HOST, SMTP_PORT (기본 587), SMTP_FROM, SMTP_TO, SMTP_PASSWORD
+  SMTP_USE_SSL (true/false, 기본 false — 포트 465 SSL 전용 서버용)
 
 Graceful skip 조건 (exit 0):
   - .env 파일 없음
@@ -56,7 +57,11 @@ def check_config(env):
 def send_email(env, subject, body):
     host = env["SMTP_HOST"]
     port = int(env.get("SMTP_PORT", 587))
-    from_addr = env.get("SMTP_FROM", env.get("SMTP_TO", ""))
+    use_ssl = env.get("SMTP_USE_SSL", "").lower() in ("true", "1", "yes")
+    from_addr = env.get("SMTP_FROM", "")
+    if not from_addr:
+        print("경고: SMTP_FROM 미설정 -- SMTP_TO를 발신자로 사용합니다", file=sys.stderr)
+        from_addr = env.get("SMTP_TO", "")
     to_addr = env.get("SMTP_TO", "")
     password = env.get("SMTP_PASSWORD", "")
 
@@ -66,9 +71,13 @@ def send_email(env, subject, body):
     msg["To"] = to_addr
 
     try:
-        with smtplib.SMTP(host, port, timeout=10) as server:
-            server.ehlo()
-            server.starttls()
+        if use_ssl:
+            ctx = smtplib.SMTP_SSL(host, port, timeout=10)
+        else:
+            ctx = smtplib.SMTP(host, port, timeout=10)
+            ctx.ehlo()
+            ctx.starttls()
+        with ctx as server:
             server.login(from_addr, password)
             server.sendmail(from_addr, [to_addr], msg.as_string())
         print("이메일 발송 완료 -> " + to_addr)

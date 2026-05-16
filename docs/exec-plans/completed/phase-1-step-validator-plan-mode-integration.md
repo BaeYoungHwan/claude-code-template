@@ -1,6 +1,6 @@
 # Phase 1 — step-validator Plan 모드 통합
 
-> 출첲: .claude/plans/claude-plan-smooth-pascal.md
+> 출처: .claude/plans/claude-plan-smooth-pascal.md
 > 생성: 2026-05-16
 
 ## 목표

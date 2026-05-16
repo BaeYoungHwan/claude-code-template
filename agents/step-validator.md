@@ -156,12 +156,33 @@ CALLER_CONTEXT가 ultrawork이면 이 단계를 건너뜀.
 
 1. .env 파일 없음
 2. SMTP_HOST 미설정
-3. .claude/skills/send_notification.py 없음
+3. `.claude/skills/send_notification.py` 없음 → 호출 전 step-validator가 확인
 
 ### 이메일 리포트 형식
 
+```
+제목: [Phase {PHASE_N} 완료] {PLAN_NAME} — {VERDICT}
 
+완료 시각: YYYY-MM-DD HH:MM
+플랜: {PLAN_NAME}
+Phase: {PHASE_N}
+태스크: {TASK_DONE}/{TASK_TOTAL} 완료
+
+검증 결과
+──────────────────
+Lint: {LINT_RESULT}
+테스트: {TEST_RESULT}
+Verdict: {VERDICT}
+
+── step-validator 자동 생성 리포트 ──
+```
 
 ### 호출 명령
+
+`.claude/skills/send_notification.py` 존재 확인 후 호출. 없으면 "스크립트 없음" 출력 후 진행 (오류 없음).
+
+```bash
+python3 .claude/skills/send_notification.py   --mode plan-report   --subject "[Phase ${PHASE_N} 완료] ${PLAN_NAME} — ${VERDICT}"   --task-done "${TASK_DONE}"   --task-total "${TASK_TOTAL}"   --lint-result "${LINT_RESULT}"   --test-result "${TEST_RESULT}"   --verdict "${VERDICT}"
+```
 
 
