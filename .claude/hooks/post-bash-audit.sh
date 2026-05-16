@@ -16,8 +16,11 @@ COMMAND=$(get_tool_input_field "$INPUT" "command")
 # logs/ 디렉토리 생성 (없으면)
 mkdir -p "$LOG_DIR"
 
-# 로그 로테이션: 5MB 초과 시 .1 백업으로 교체
+# 로그 로테이션: 5MB 초과 시 최대 5세대 회전
 if [ -f "$LOG_FILE" ] && [ "$(wc -c < "$LOG_FILE")" -gt 5242880 ]; then
+  for i in 5 4 3 2 1; do
+    [ -f "${LOG_FILE}.${i}" ] && mv "${LOG_FILE}.${i}" "${LOG_FILE}.$((i+1))"
+  done
   mv "$LOG_FILE" "${LOG_FILE}.1"
 fi
 
