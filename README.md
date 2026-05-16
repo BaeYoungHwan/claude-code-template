@@ -5,6 +5,17 @@
 
 ---
 
+## 요구사항
+
+- **Bash 4+** — Linux/macOS 기본 제공. Windows는 [Git Bash](https://git-scm.com/downloads) 또는 WSL2 권장.
+- **Python 3.8+** — 훅 JSON 파싱 및 분석 스크립트용 (없으면 훅이 빈 값으로 폴백)
+- **git** — 버전 관리
+- **gh CLI** — PR 자동화 (`/PR` 스킬 사용 시)
+
+> Windows PowerShell 단독 환경은 현재 미지원입니다. Git Bash 또는 WSL2에서 실행하세요.
+
+---
+
 ## 무엇이 포함되나
 
 ### 보안 & 감사 훅 (`.claude/hooks/`)

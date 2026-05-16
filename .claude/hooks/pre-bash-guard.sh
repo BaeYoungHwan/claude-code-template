@@ -35,9 +35,37 @@ if echo "$COMMAND" | grep -qE 'git\s+push\s+.*--force|git\s+push\s+-f\b'; then
   block "강제 푸시(git push --force)는 차단됩니다."
 fi
 
-# 5. 재귀 삭제 차단
-if echo "$COMMAND" | grep -iqE 'rm\s+-[a-zA-Z]*r[a-zA-Z]*f|rm\s+-[a-zA-Z]*f[a-zA-Z]*r'; then
-  block "재귀 강제 삭제(rm -rf)는 차단됩니다."
+# 5. 재귀 삭제 차단 (-rf/-fr, 분리 플래그, 장기 옵션 --recursive/--force, 플래그 역전 모두 포함)
+_rm_has_r=$(echo "$COMMAND" | grep -iqE '\brm\b.*(-[a-zA-Z]*[rR][a-zA-Z]*\b|--recursive)' && echo yes || echo no)
+_rm_has_f=$(echo "$COMMAND" | grep -iqE '\brm\b.*(-[a-zA-Z]*f[a-zA-Z]*\b|--force)' && echo yes || echo no)
+
+if [ "$_rm_has_r" = yes ] && [ "$_rm_has_f" = yes ]; then
+  block "재귀 강제 삭제(rm -rf / --recursive --force)는 차단됩니다."
+fi
+
+# 6-a. 풀 테이블 스캔 차단 (deny-patterns.json에서 마이그레이션)
+if echo "$COMMAND" | grep -iqE '\bSELECT\s+\*\s+FROM\b'; then
+  block "SELECT * FROM은 차단됩니다. 풀 테이블 스캔 금지 — 조회 컬럼과 WHERE 인덱스를 명시하세요."
+fi
+
+# 6. DB 파괴 명령 및 위험 권한 변경 차단
+if echo "$COMMAND" | grep -iqE 'DROP\s+(TABLE|DATABASE|SCHEMA|INDEX|VIEW|TRIGGER|FUNCTION|PROCEDURE)'; then
+  block "DROP 명령은 차단됩니다. 되돌릴 수 없는 DB/스키마 파괴 명령입니다."
+fi
+
+# SQL 클라이언트 컨텍스트에서만 TRUNCATE 차단 (Python file.truncate() 오탐 방지)
+if echo "$COMMAND" | grep -iqE '(psql|mysql|sqlite3|sqlplus)\b.*\bTRUNCATE\b|\bTRUNCATE\b.*\b(psql|mysql|sqlite3|sqlplus)\b|\bTRUNCATE\s+TABLE\b'; then
+  block "TRUNCATE는 차단됩니다. 테이블 전체 삭제 명령입니다."
+fi
+
+if echo "$COMMAND" | grep -iqE 'chmod\s+777'; then
+  block "chmod 777은 차단됩니다. 전체 권한 부여는 보안 취약점입니다."
+fi
+
+# 7. 코드 인젝션 패턴 차단
+# \beval\b: bash eval cmd / eval $(...) 형태까지 모두 차단. \beval\s*\(는 bash 형태 미탐 — 패턴 변경 금지
+if echo "$COMMAND" | grep -qE '\beval\b'; then
+  block "eval 실행은 차단됩니다. 코드 인젝션 위험이 있습니다."
 fi
 
 exit 0

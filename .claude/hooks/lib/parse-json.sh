@@ -13,6 +13,9 @@ for _py in python3 python; do
 done
 if [ -z "$PYTHON_CMD" ]; then
   echo "⚠️  [parse-json.sh] python3/python을 찾을 수 없습니다. 훅 JSON 파싱이 비활성화됩니다." >&2
+  # Python 없음 — stub 함수로 안전하게 폴백
+  get_tool_input_field() { echo ""; }
+  get_response_field() { echo ""; }
   return 0
 fi
 
@@ -21,14 +24,16 @@ fi
 get_tool_input_field() {
   local input="$1"
   local field="$2"
-  echo "$input" | "$PYTHON_CMD" -c "
-import sys, json
+  echo "$input" | PARSE_FIELD="$field" "$PYTHON_CMD" -c '
+import os, sys, json
+field = os.environ.get("PARSE_FIELD", "")
 try:
     data = json.load(sys.stdin)
-    print(data.get('tool_input', {}).get('$field', ''))
+    val = data.get("tool_input", {}).get(field)
+    print("" if val is None else str(val))
 except:
-    print('')
-" 2>/dev/null
+    print("")
+' 2>/dev/null
 }
 
 # tool_response의 특정 필드 추출
@@ -36,12 +41,14 @@ except:
 get_response_field() {
   local input="$1"
   local field="$2"
-  echo "$input" | "$PYTHON_CMD" -c "
-import sys, json
+  echo "$input" | PARSE_FIELD="$field" "$PYTHON_CMD" -c '
+import os, sys, json
+field = os.environ.get("PARSE_FIELD", "")
 try:
     data = json.load(sys.stdin)
-    print(data.get('tool_response', {}).get('$field', ''))
+    val = data.get("tool_response", {}).get(field)
+    print("" if val is None else str(val))
 except:
-    print('')
-" 2>/dev/null
+    print("")
+' 2>/dev/null
 }

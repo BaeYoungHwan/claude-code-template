@@ -22,7 +22,7 @@ model: sonnet
 
 ### 🔍 Review Lane
 **역할**: 코드 검토, 보안 분석, 품질 검증
-**특징**: 읽기 전용, 다른 에이전트 결과 검토
+**특징**: 파일 작성 없음. 읽기 전용 분석만 수행. 다른 에이전트 결과 검토.
 **예시 에이전트**: `code-reviewer.md`
 **권장 모델**: Sonnet
 
@@ -39,6 +39,14 @@ model: sonnet
 **특징**: 도메인 규칙과 컨텍스트를 깊이 이해
 **예시 에이전트**: `auth-agent.md`, `payment-agent.md`
 **권장 모델**: Sonnet ~ Opus
+
+### ✅ Verification Lane
+**역할**: 자동화된 검증 게이트 — lint/테스트/diff 건전성 확인
+**특징**: 일시적 상태 변경 허용 (lint/테스트 부산물). 영구 파일 생성 금지.
+**예시 에이전트**: `step-validator.md`
+**권장 모델**: Sonnet
+
+---
 
 ### 🎯 Coordination Lane
 **역할**: 다른 에이전트 조율, 결과 통합
@@ -61,6 +69,7 @@ model: sonnet
 
 | 에이전트 | 레인 | 모델 | 상태 |
 |----------|------|------|------|
-| `example-agent.md` | - | sonnet | 템플릿 |
+| `security-reviewer.md` | Review | sonnet | 활성 |
 | `code-reviewer.md` | Review | sonnet | 활성 |
 | `doc-gardener.md` | Review | haiku | 활성 |
+| `step-validator.md` | Verification | sonnet | 활성 |

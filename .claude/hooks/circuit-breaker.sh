@@ -21,6 +21,15 @@ if [ "$EXIT_CODE" = "0" ]; then
   exit 0
 fi
 
+# 에러 메시지 정규화 (타임스탬프, PID, 임시 경로 제거)
+normalize_error() {
+  echo "$1" \
+    | sed -E 's/[0-9]{4}-[0-9]{2}-[0-9]{2}[T ][0-9:]+Z?//g' \
+    | sed -E 's/\b[0-9]{5,}\b/<pid>/g' \
+    | sed -E 's|/tmp/[^ ]+|/tmp/<x>|g' \
+    | tr -s ' '
+}
+
 # 에러 출력 추출 (stderr, 첫 3줄만)
 ERROR_OUTPUT=$(echo "$INPUT" | "$PYTHON_CMD" -c "
 import sys, json
@@ -35,7 +44,8 @@ except:
 
 [ -z "$ERROR_OUTPUT" ] && exit 0
 
-# 에러 히스토리에 추가
+# 에러 정규화 후 히스토리에 추가
+ERROR_OUTPUT=$(normalize_error "$ERROR_OUTPUT")
 echo "$ERROR_OUTPUT" >> "$ERROR_HISTORY"
 
 # 동일 에러 반복 횟수 계산

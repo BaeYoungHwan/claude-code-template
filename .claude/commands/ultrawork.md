@@ -28,6 +28,13 @@
 3. **에이전트 배분**: 각 독립 작업에 서브에이전트 할당
 4. **병렬 실행**: 동일 메시지에 여러 Agent 호출
 5. **결과 통합**: 각 에이전트 결과 수집 후 충돌 확인
+6. **검증 (step-validator 자동 호출)**: 4단계(병렬 실행) 직전 `BASE_COMMIT=$(git rev-parse HEAD)` 캡처,
+   모든 에이전트 완료 후 이 값을 포함해 `agents/step-validator.md` 호출
+
+   step-validator 결과 처리:
+   - `jq '.verdict'`가 `"pass"` → 성공 보고
+   - `jq '.verdict'`가 `"fail"` → 실패 원인을 해당 태스크에 피드백 후 재시도 (최대 3회)
+   - jq 없는 환경: 출력에서 `"verdict": "pass"` 문자열 grep으로 대체
 
 ## 병렬 처리 가능 기준
 
