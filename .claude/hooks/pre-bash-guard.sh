@@ -50,12 +50,18 @@ if echo "$COMMAND" | grep -iqE 'DROP\s+(TABLE|DATABASE|SCHEMA|INDEX|VIEW|TRIGGER
   block "DROP 명령은 차단됩니다. 되돌릴 수 없는 DB/스키마 파괴 명령입니다."
 fi
 
-if echo "$COMMAND" | grep -iqE '\bTRUNCATE\b'; then
+# SQL 클라이언트 컨텍스트에서만 TRUNCATE 차단 (Python file.truncate() 오탐 방지)
+if echo "$COMMAND" | grep -iqE '(psql|mysql|sqlite3|sqlplus)\b.*\bTRUNCATE\b|\bTRUNCATE\b.*\b(psql|mysql|sqlite3|sqlplus)\b|\bTRUNCATE\s+TABLE\b'; then
   block "TRUNCATE는 차단됩니다. 테이블 전체 삭제 명령입니다."
 fi
 
 if echo "$COMMAND" | grep -iqE 'chmod\s+777'; then
   block "chmod 777은 차단됩니다. 전체 권한 부여는 보안 취약점입니다."
+fi
+
+# 7. 코드 인젝션 패턴 차단
+if echo "$COMMAND" | grep -qE '\beval\s*\('; then
+  block "eval() 실행은 차단됩니다. 코드 인젝션 위험이 있습니다."
 fi
 
 exit 0

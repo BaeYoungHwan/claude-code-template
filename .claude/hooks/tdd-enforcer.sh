@@ -50,6 +50,7 @@ if [ "$EXT" = "py" ]; then
   do
     if [ -f "$pattern" ]; then
       TEST_EXISTS=true
+      EXPECTED_PATHS=()
       break
     fi
     EXPECTED_PATHS+=("$pattern")
@@ -66,6 +67,7 @@ if echo "$EXT" | grep -qE '^(ts|tsx|js|jsx)$'; then
   do
     if [ -f "$pattern" ]; then
       TEST_EXISTS=true
+      EXPECTED_PATHS=()
       break
     fi
     EXPECTED_PATHS+=("$pattern")
@@ -80,6 +82,7 @@ if [ "$EXT" = "go" ]; then
   do
     if [ -f "$pattern" ]; then
       TEST_EXISTS=true
+      EXPECTED_PATHS=()
       break
     fi
     EXPECTED_PATHS+=("$pattern")
@@ -96,6 +99,7 @@ if [ "$EXT" = "rs" ]; then
     do
       if [ -f "$pattern" ]; then
         TEST_EXISTS=true
+        EXPECTED_PATHS=()
         break
       fi
       EXPECTED_PATHS+=("$pattern")
@@ -112,6 +116,7 @@ if [ "$EXT" = "java" ]; then
   do
     if [ -f "$pattern" ]; then
       TEST_EXISTS=true
+      EXPECTED_PATHS=()
       break
     fi
     EXPECTED_PATHS+=("$pattern")
@@ -127,6 +132,7 @@ if [ "$EXT" = "rb" ]; then
   do
     if [ -f "$pattern" ]; then
       TEST_EXISTS=true
+      EXPECTED_PATHS=()
       break
     fi
     EXPECTED_PATHS+=("$pattern")
@@ -141,6 +147,7 @@ if [ "$EXT" = "php" ]; then
   do
     if [ -f "$pattern" ]; then
       TEST_EXISTS=true
+      EXPECTED_PATHS=()
       break
     fi
     EXPECTED_PATHS+=("$pattern")
