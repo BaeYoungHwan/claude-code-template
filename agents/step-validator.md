@@ -1,7 +1,7 @@
 ---
 name: step-validator
 description: ultrawork 병렬 태스크 완료 후 종합 검증 — lint/테스트/diff 범위 자동 검사
-model: claude-sonnet-4-6
+model: sonnet
 ---
 
 # step-validator

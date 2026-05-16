@@ -1,7 +1,7 @@
 ---
 name: security-reviewer
 description: 코드 변경사항의 보안 취약점 전담 검토
-model: claude-sonnet-4-6
+model: sonnet
 ---
 
 ## 역할
@@ -40,7 +40,7 @@ model: claude-sonnet-4-6
 | GitHub PAT (classic) | `ghp_[a-zA-Z0-9_]{36,255}` |
 | Slack Token | `xox[bpa]-[0-9]{10,13}-[0-9a-zA-Z\-]+` |
 | Google API Key | `AIza[0-9A-Za-z\-_]{35}` |
-| 범용 패턴 | `(password\|api_key\|secret\|token)\s*=\s*['"'][^'"']{8,}['"']` |
+| 범용 패턴 | `(password|api_key|secret|token)\s*=\s*['"][^'"]{8,}['"]` |
 
 > 패턴 매칭 시 🔴 위험으로 보고. 오탐 가능성이 있으므로 컨텍스트를 함께 확인.
 

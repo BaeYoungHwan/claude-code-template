@@ -129,6 +129,10 @@ n 선택 시 종료. y 선택 시 계속 진행.
 
 **Python이 사용 가능한 경우**: f-string 템플릿을 이용해 `docs/project-close-report.html`을 생성한다.
 
+> **주의:** 아래 스크립트의 `[2단계 결과]`, `[4단계 결과]` 플레이스홀더는
+> 2단계·4단계에서 수집한 실제 값(AI-Readiness 점수, 미완료 TODO 개수)으로
+> Claude가 치환한 후 Python 스크립트를 실행합니다.
+
 ```python
 # 예시 생성 명령 (Python 3)
 python -c "

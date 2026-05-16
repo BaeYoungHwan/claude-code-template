@@ -1,7 +1,7 @@
 ---
 name: {{DOMAIN_NAME}}-agent
 description: {{DOMAIN_DESC}}
-model: claude-sonnet-4-6
+model: sonnet
 ---
 
 <!--

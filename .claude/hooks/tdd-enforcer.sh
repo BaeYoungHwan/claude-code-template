@@ -105,7 +105,10 @@ fi
 
 # Java 패턴 (JUnit: StemTest.java)
 if [ "$EXT" = "java" ]; then
-  for pattern in     "${DIRNAME}/${STEM}Test.java"     "src/test/java/${STEM}Test.java"     "tests/${STEM}Test.java"
+  for pattern in \
+    "${DIRNAME}/${STEM}Test.java" \
+    "src/test/java/${STEM}Test.java" \
+    "tests/${STEM}Test.java"
   do
     if [ -f "$pattern" ]; then
       TEST_EXISTS=true
@@ -117,7 +120,10 @@ fi
 
 # Ruby 패턴 (RSpec: stem_spec.rb)
 if [ "$EXT" = "rb" ]; then
-  for pattern in     "${DIRNAME}/${STEM}_spec.rb"     "spec/${STEM}_spec.rb"     "${DIRNAME}/test_${STEM}.rb"
+  for pattern in \
+    "${DIRNAME}/${STEM}_spec.rb" \
+    "spec/${STEM}_spec.rb" \
+    "${DIRNAME}/test_${STEM}.rb"
   do
     if [ -f "$pattern" ]; then
       TEST_EXISTS=true
@@ -129,7 +135,9 @@ fi
 
 # PHP 패턴 (PHPUnit: StemTest.php)
 if [ "$EXT" = "php" ]; then
-  for pattern in     "${DIRNAME}/${STEM}Test.php"     "tests/${STEM}Test.php"
+  for pattern in \
+    "${DIRNAME}/${STEM}Test.php" \
+    "tests/${STEM}Test.php"
   do
     if [ -f "$pattern" ]; then
       TEST_EXISTS=true
