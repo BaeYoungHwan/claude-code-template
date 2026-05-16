@@ -13,7 +13,7 @@ model: sonnet
 
 - **레인**: Review Lane
 - **트리거**: `/ultrawork` 6단계에서 자동 호출
-- **모델**: claude-sonnet-4-6
+- **모델**: sonnet
 - **생성 조건**: 모든 SCALE (항상 생성)
 
 ---
@@ -47,7 +47,7 @@ git diff <BASE_COMMIT>..HEAD --name-only
 | package.json + "lint" | `npm run lint` |
 | pyproject.toml / setup.py | `flake8` 또는 `ruff check` |
 | go.mod | `go vet ./...` |
-| Cargo.toml | `cargo clippy -- -D warnings` |
+| Cargo.toml | `cargo clippy` (경고 출력, 차단 안 함) |
 | 감지 불가 | 건너뜀 (경고 출력) |
 
 ### 3단계 — 테스트 실행

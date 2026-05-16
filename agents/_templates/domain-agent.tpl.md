@@ -13,6 +13,12 @@ model: sonnet
   {{DOMAIN_RULES}}  — 도메인별 비즈니스 규칙 (여러 줄 가능)
   {{DOMAIN_FILES}}  — 담당 파일/모듈 경로 (여러 줄 가능)
 
+다중 줄 치환 규칙:
+  - {{DOMAIN_RULES}}, {{DOMAIN_FILES}}가 여러 줄인 경우:
+      init-project가 각 줄에 `- ` 접두사를 자동 부여하여 마크다운 목록으로 삽입
+  - sed 한 줄 치환은 줄바꿈 깨짐 위험이 있으므로 HEREDOC 방식 치환 권장
+  - 특수문자(백슬래시, 큰따옴표)가 포함된 경우 이스케이프 처리 필요
+
 예시 도메인:
   웹앱       → auth-agent.md (인증·세션), user-agent.md (사용자 관리)
   E-Commerce → payment-agent.md, product-agent.md, order-agent.md

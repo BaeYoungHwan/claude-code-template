@@ -37,8 +37,8 @@ fi
 
 # 5. 재귀 삭제 차단 (합쳐진 플래그: -rf/-fr, 또는 분리된 플래그: -r -f)
 _rm_combined=$(echo "$COMMAND" | grep -iqE '(^|[[:space:];|&])rm\s+-[a-zA-Z]*r[a-zA-Z]*f|(^|[[:space:];|&])rm\s+-[a-zA-Z]*f[a-zA-Z]*r' && echo yes || echo no)
-_rm_has_r=$(echo "$COMMAND" | grep -qE '(^|[[:space:];|&])rm(\s+-[a-zA-Z]*)*\s+-[a-zA-Z]*r([[:space:]]|$)' && echo yes || echo no)
-_rm_has_f=$(echo "$COMMAND" | grep -qE '(^|[[:space:];|&])rm(\s+-[a-zA-Z]*)*\s+-[a-zA-Z]*f([[:space:]]|$)' && echo yes || echo no)
+_rm_has_r=$(echo "$COMMAND" | grep -iqE '(^|[[:space:];|&])rm(\s+-[a-zA-Z]*)*\s+-[a-zA-Z]*r([[:space:]]|$)' && echo yes || echo no)
+_rm_has_f=$(echo "$COMMAND" | grep -iqE '(^|[[:space:];|&])rm(\s+-[a-zA-Z]*)*\s+-[a-zA-Z]*f([[:space:]]|$)' && echo yes || echo no)
 
 if [ "$_rm_combined" = yes ] || { [ "$_rm_has_r" = yes ] && [ "$_rm_has_f" = yes ]; }; then
   block "재귀 강제 삭제(rm -rf)는 차단됩니다."

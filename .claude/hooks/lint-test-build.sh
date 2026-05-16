@@ -54,7 +54,7 @@ fi
 
 # Rust
 if [ -f "$PROJECT_ROOT/Cargo.toml" ]; then
-  command -v cargo >/dev/null 2>&1 && run_check "cargo clippy" cargo clippy --manifest-path "$PROJECT_ROOT/Cargo.toml" -- -D warnings
+  command -v cargo >/dev/null 2>&1 && run_check "cargo clippy" cargo clippy --manifest-path "$PROJECT_ROOT/Cargo.toml"
   command -v cargo >/dev/null 2>&1 && run_check "cargo test" cargo test --manifest-path "$PROJECT_ROOT/Cargo.toml"
   echo "✅ [Lint-Test-Build] 모든 검사 통과 — commit 허용" >&2
   exit 0

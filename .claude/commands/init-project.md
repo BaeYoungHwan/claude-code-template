@@ -823,7 +823,7 @@ main 브랜치에 직접 커밋하며, 커밋 컨벤션은 `.claude/commands/com
 
 ### 3-8. 보안 에이전트 활성화 (`GEN_SECURITY = 1`인 경우)
 
-`agents/security-reviewer.md`가 이미 하네스에 포함되어 있으므로 별도 생성 없이 활성화 확인만 한다.
+`agents/security-reviewer.md`가 이미 하네스에 포함되어 있으므로 별도 파일 생성 없이 LANES.md 표에 행이 있는지만 확인한다.
 
 `agents/LANES.md`의 현재 에이전트 목록에 `security-reviewer.md` 행이 있는지 확인하고, 없으면 추가:
 ```
@@ -904,7 +904,7 @@ docs/ref/session-state.md
   [GEN_CONTRIBUTING=1]
   - CONTRIBUTING.md
   [GEN_SECURITY=1]
-  - agents/security-reviewer.md                  (활성화 확인됨)
+  - agents/security-reviewer.md                  (하네스 기본 포함 — D항목 선택으로 LANES.md에 활성 등록됨)
   [GEN_DOMAIN=1]
   - agents/[도메인명]-agent.md
   [GEN_EMAIL=1]

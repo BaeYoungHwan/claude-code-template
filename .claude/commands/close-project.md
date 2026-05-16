@@ -140,6 +140,12 @@ import datetime, os, pathlib
 ai_score = '측정 안 됨'   # 2단계 AI-Readiness 결과로 Claude가 이 값을 치환
 todo_count = 0            # 4단계 미완료 TODO 개수로 Claude가 이 값을 치환
 
+# 치환 검증 — 둘 다 기본값이면 실행 중단
+if ai_score == '측정 안 됨' and todo_count == 0:
+    import sys
+    print('ERROR: ai_score/todo_count가 모두 기본값입니다. 치환 후 실행하세요.', file=sys.stderr)
+    sys.exit(2)
+
 try:
     import re as _re
     _claude_text = pathlib.Path('CLAUDE.md').read_text(encoding='utf-8')
