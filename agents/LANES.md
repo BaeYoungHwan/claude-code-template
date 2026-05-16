@@ -69,7 +69,7 @@ model: sonnet
 
 | 에이전트 | 레인 | 모델 | 상태 |
 |----------|------|------|------|
-| `example-agent.md` | - | sonnet | 템플릿 |
+| `security-reviewer.md` | Review | sonnet | 활성 |
 | `code-reviewer.md` | Review | sonnet | 활성 |
 | `doc-gardener.md` | Review | haiku | 활성 |
 | `step-validator.md` | Verification | sonnet | 활성 |
