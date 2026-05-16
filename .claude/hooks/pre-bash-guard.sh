@@ -41,8 +41,8 @@ if echo "$COMMAND" | grep -iqE 'rm\s+-[a-zA-Z]*r[a-zA-Z]*f|rm\s+-[a-zA-Z]*f[a-zA
 fi
 
 # 6. DB 파괴 명령 및 위험 권한 변경 차단
-if echo "$COMMAND" | grep -iqE 'DROP\s+TABLE|DROP\s+DATABASE'; then
-  block "DROP TABLE/DROP DATABASE는 차단됩니다. 되돌릴 수 없는 DB 파괴 명령입니다."
+if echo "$COMMAND" | grep -iqE 'DROP\s+(TABLE|DATABASE|SCHEMA|INDEX|VIEW|TRIGGER|FUNCTION|PROCEDURE)'; then
+  block "DROP 명령은 차단됩니다. 되돌릴 수 없는 DB/스키마 파괴 명령입니다."
 fi
 
 if echo "$COMMAND" | grep -iqE '\bTRUNCATE\b'; then

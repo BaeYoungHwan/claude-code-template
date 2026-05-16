@@ -62,6 +62,10 @@ git push -u origin [현재 브랜치]
 ### 5단계 — PR 생성
 
 ```bash
+# Claude가 실행 시 아래 플레이스홀더를 실제 값으로 채운다:
+#   [자동 생성된 제목]          → git log -1 --pretty=%s 첫 줄
+#   [커밋 메시지 요약]          → git log -1 --pretty=%B 전체
+#   [git diff --name-only 목록] → git diff HEAD~1 --name-only 출력
 gh pr create \
   --title "[자동 생성된 제목]" \
   --body "$(cat <<'PREOF'

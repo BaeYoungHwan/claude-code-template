@@ -32,6 +32,18 @@ model: claude-sonnet-4-6
 - `.env` 미사용 패턴
 - `git log`에 이미 커밋된 자격증명
 
+#### 우선 탐지 패턴
+
+| 유형 | 정규식 |
+|------|--------|
+| AWS Access Key ID | `AKIA[0-9A-Z]{16}` |
+| GitHub PAT (classic) | `ghp_[a-zA-Z0-9_]{36,255}` |
+| Slack Token | `xox[bpa]-[0-9]{10,13}-[0-9a-zA-Z\-]+` |
+| Google API Key | `AIza[0-9A-Za-z\-_]{35}` |
+| 범용 패턴 | `(password\|api_key\|secret\|token)\s*=\s*['"'][^'"']{8,}['"']` |
+
+> 패턴 매칭 시 🔴 위험으로 보고. 오탐 가능성이 있으므로 컨텍스트를 함께 확인.
+
 ## 작업 범위
 
 - 지정된 파일 또는 PR diff만 검토

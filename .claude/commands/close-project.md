@@ -145,9 +145,9 @@ close_date = datetime.date.today().isoformat()
 completed = list(pathlib.Path('docs/exec-plans/completed').glob('*')) if pathlib.Path('docs/exec-plans/completed').exists() else []
 phase_list = ''.join(f'<li>{p.name}</li>' for p in completed)
 
-html = f'''<!DOCTYPE html>
-<html lang=\"ko\">
-<head><meta charset=\"UTF-8\"><title>종료 보고서 — {project_name}</title>
+html = f"""<!DOCTYPE html>
+<html lang='ko'>
+<head><meta charset='UTF-8'><title>종료 보고서 — {project_name}</title>
 <style>body{{font-family:sans-serif;max-width:800px;margin:40px auto;padding:0 20px}}
 h1{{color:#1a1a2e}}table{{border-collapse:collapse;width:100%}}
 td,th{{border:1px solid #ddd;padding:8px}}th{{background:#f4f4f4}}</style>
@@ -162,7 +162,7 @@ td,th{{border:1px solid #ddd;padding:8px}}th{{background:#f4f4f4}}</style>
 </table>
 <h2>완료된 Phase</h2>
 <ul>{phase_list}</ul>
-</body></html>'''
+</body></html>"""
 
 pathlib.Path('docs/project-close-report.html').write_text(html, encoding='utf-8')
 print('✅ docs/project-close-report.html 생성 완료')
