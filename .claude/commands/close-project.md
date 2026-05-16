@@ -138,12 +138,12 @@ python -c "
 import datetime, os, pathlib
 
 ai_score = '측정 안 됨'   # 2단계 AI-Readiness 결과로 Claude가 이 값을 치환
-todo_count = 0            # 4단계 미완료 TODO 개수로 Claude가 이 값을 치환
+todo_count = -1           # 4단계 미완료 TODO 개수로 Claude가 이 값을 치환 (-1은 미치환 센티넬)
 
 # 치환 검증 — 둘 다 기본값이면 실행 중단
-if ai_score == '측정 안 됨' and todo_count == 0:
+if ai_score == '측정 안 됨' or todo_count == -1:
     import sys
-    print('ERROR: ai_score/todo_count가 모두 기본값입니다. 치환 후 실행하세요.', file=sys.stderr)
+    print('ERROR: ai_score 또는 todo_count가 치환되지 않았습니다. 실제 값으로 치환 후 실행하세요.', file=sys.stderr)
     sys.exit(2)
 
 try:

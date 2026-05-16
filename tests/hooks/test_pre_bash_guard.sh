@@ -52,6 +52,27 @@ assert "0" "$result" "ls -la /tmp → 허용"
 result=$(run_hook "pre-bash-guard.sh" '{"tool_name":"Bash","tool_input":{"command":"git status"}}')
 assert "0" "$result" "git status → 허용"
 
+
+# 9. rm --recursive --force 차단 (장기 옵션)
+result=$(run_hook "pre-bash-guard.sh" '{"tool_name":"Bash","tool_input":{"command":"rm --recursive --force /tmp/x"}}')
+assert "1" "$result" "rm --recursive --force /tmp/x → 차단"
+
+# 10. rm --recursive -f 차단 (혼합)
+result=$(run_hook "pre-bash-guard.sh" '{"tool_name":"Bash","tool_input":{"command":"rm --recursive -f /tmp/x"}}')
+assert "1" "$result" "rm --recursive -f /tmp/x → 차단"
+
+# 11. rm /path -r -f 차단 (플래그 역전)
+result=$(run_hook "pre-bash-guard.sh" '{"tool_name":"Bash","tool_input":{"command":"rm /tmp/x -r -f"}}')
+assert "1" "$result" "rm /tmp/x -r -f → 차단"
+
+# 12. bash eval $var 차단
+result=$(run_hook "pre-bash-guard.sh" '{"tool_name":"Bash","tool_input":{"command":"eval some_cmd"}}')
+assert "1" "$result" "eval \"\$PAYLOAD\" → 차단"
+
+# 13. eval $(subshell) 차단
+result=$(run_hook "pre-bash-guard.sh" '{"tool_name":"Bash","tool_input":{"command":"eval $(cat /tmp/script.sh)"}}')
+assert "1" "$result" "eval \$(cmd) → 차단"
+
 echo ""
 echo "  결과: PASS=$PASS FAIL=$FAIL"
 [ "$FAIL" -gt 0 ] && exit 1 || exit 0

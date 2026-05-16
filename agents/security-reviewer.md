@@ -23,8 +23,10 @@ model: sonnet
 - **A02 Cryptographic Failures** — 평문 비밀번호, 약한 암호화
 - **A03 Injection** — SQL Injection, XSS, Command Injection
 - **A04 Insecure Design** — 인증 우회 가능 설계
+- **A05 Security Misconfiguration** — 디버그 엔드포인트 노출, 기본 자격증명, 불필요한 CORS 설정
 - **A07 Identification and Authentication Failures** — 세션 고정, 토큰 만료 없음
 - **A09 Security Logging Failures** — 민감 데이터 로그 노출
+- **A10 SSRF** — 사용자 입력으로 내부 서비스 URL 구성, 클라우드 메타데이터 엔드포인트 접근
 
 ### 비밀키·자격증명 탐지
 
