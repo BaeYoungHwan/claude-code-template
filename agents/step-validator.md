@@ -67,6 +67,38 @@ git diff <BASE_COMMIT>..HEAD --name-only
 
 ---
 
+## 출력 스키마
+
+ultrawork와의 인터페이스 정형화를 위해 표준 JSON을 출력합니다.
+텍스트 보고서와 별개로 결과 JSON을 stdout에 출력합니다.
+
+```json
+{
+  "verdict": "pass",
+  "base_commit": "abc1234",
+  "changed_files": ["src/user.py", "tests/test_user.py"],
+  "lint": {
+    "executed": true,
+    "passed": true,
+    "tool": "ruff",
+    "output": ""
+  },
+  "test": {
+    "executed": true,
+    "passed": true,
+    "tool": "pytest",
+    "count": 12,
+    "output": ""
+  },
+  "code_reviewer_summary": "변경사항이 로직 및 명명 규칙 기준 적합합니다."
+}
+```
+
+ultrawork가 `jq '.verdict'`로 파싱하여 `"pass"` / `"fail"` 판정.
+`verdict`가 `"fail"`이면 `lint.output` 또는 `test.output`에 오류 내용이 포함됩니다.
+
+---
+
 ## 결과 처리
 
 ### 통과 (1~3단계 모두 성공)

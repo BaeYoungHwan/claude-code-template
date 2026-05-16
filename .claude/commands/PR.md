@@ -59,6 +59,12 @@ git push origin [현재 브랜치]
 git push -u origin [현재 브랜치]
 ```
 
+push 실패 시 안내:
+- 권한 거부 (Permission denied) → `gh auth status` 확인 후 `gh auth login`
+- non-fast-forward → `git pull --rebase origin <브랜치>` 후 재시도
+- 업스트림 없음 → 자동으로 `-u` 옵션 추가하여 재시도
+- 그 외 오류 → 오류 메시지를 출력하고 PR 생성 중단 (커밋은 로컬에 유지됨)
+
 ### 5단계 — PR 생성
 
 ```bash

@@ -46,7 +46,9 @@ if [ "$EXT" = "py" ]; then
     "$(dirname "$DIRNAME")/tests/test_${STEM}.py" \
     "${DIRNAME}/test_${STEM}.py" \
     "tests/test_${STEM}.py" \
-    "tests/${STEM}/test_${STEM}.py"
+    "tests/${STEM}/test_${STEM}.py" \
+    "$(dirname "$(dirname "$DIRNAME")")/tests/test_${STEM}.py" \
+    "$(dirname "$(dirname "$DIRNAME")")/tests/${STEM}/test_${STEM}.py"
   do
     if [ -f "$pattern" ]; then
       TEST_EXISTS=true
@@ -62,7 +64,9 @@ if echo "$EXT" | grep -qE '^(ts|tsx|js|jsx)$'; then
     "${DIRNAME}/${STEM}.test.${EXT}" \
     "${DIRNAME}/${STEM}.spec.${EXT}" \
     "__tests__/${STEM}.test.${EXT}" \
-    "tests/${STEM}.test.${EXT}"
+    "tests/${STEM}.test.${EXT}" \
+    "$(dirname "$DIRNAME")/__tests__/${STEM}.test.${EXT}" \
+    "packages/$(basename "$DIRNAME")/tests/${STEM}.test.${EXT}"
   do
     if [ -f "$pattern" ]; then
       TEST_EXISTS=true
