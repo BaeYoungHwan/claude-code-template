@@ -225,14 +225,14 @@
 
 ### 1. AI-Readiness 주기적 측정 체계 수립
 
-- [ ] [P1-1-A] /init-project — AI-Readiness 추적 인터뷰 추가
+- [x] [P1-1-A] /init-project — AI-Readiness 추적 인터뷰 추가
       인터뷰: "AI-Readiness 주기 측정을 활성화하시겠습니까? (Y/N)"
       Y → 추가 인터뷰: 측정 주기 선택 (주 1회 / 월 1회)
           /schedule로 주기적 ai-readiness-cartography 실행 등록
           git 비활성 감지: 30일간 커밋 없으면 스케줄 자동 일시정지
       N → 스킵
 
-- [ ] [P1-1-B] /close-project 스킬 신규 작성
+- [x] [P1-1-B] /close-project 스킬 신규 작성
       파일: .claude/commands/close-project.md
       작업 순서:
         1. 미커밋 파일 확인 + 최종 커밋 제안
