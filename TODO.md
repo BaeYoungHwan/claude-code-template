@@ -52,7 +52,7 @@
              삭제: example-agent
              code-reviewer + step-validator: 모든 SCALE 항상 생성 명시
 
-- [ ] [에이전트5] /init-project — 에이전트 자동 생성 로직 추가
+- [x] [에이전트5] /init-project — 에이전트 자동 생성 로직 추가
       파일: .claude/commands/init-project.md
       (스킬 고도화 섹션5 [스킬1-C]와 함께 진행)
       추가 내용:
@@ -129,7 +129,7 @@
         2. [에이전트5] gitignore 작업 시 docs/ref/ 추가로 이후 변경 무시
       주의: .gitignore 추가만으로는 이미 tracked 파일에 효과 없음
 
-- [ ] [문제2] QUALITY_SCORE.md / RELIABILITY.md / tech-debt-tracker.md 실사용 가이드
+- [x] [문제2] QUALITY_SCORE.md / RELIABILITY.md / tech-debt-tracker.md 실사용 가이드
       A. docs/ref/quality-guide.md 신규 작성
          내용: 각 문서가 무엇인지, 언제/누가/어떻게 채우는지 상세 설명
            QUALITY_SCORE.md — Phase 완료 후 테스트 커버리지 기반 A~F 등급 기입
@@ -137,13 +137,13 @@
            tech-debt-tracker.md — doc-gardener 에이전트가 발견한 부채 자동 추가
       B. 세 파일 각 상단에 usage 섹션 + quality-guide.md 링크 추가
 
-- [ ] [문제3] skills/ vs .claude/skills/ 구조 설명 추가
+- [x] [문제3] skills/ vs .claude/skills/ 구조 설명 추가
       현재 구조 유지 (역할이 다름, 통합 불필요):
         skills/ (루트): 마켓플레이스 배포용 SKILL.md — 다른 프로젝트가 설치 가능
         .claude/skills/: 하네스 내부 실행 스크립트 (score.py, analyze_sessions.py 등)
       처리: CLAUDE.md 프로젝트 구조 섹션에 두 폴더 역할 한 줄 설명 추가
 
-- [ ] [문제4] tdd-enforcer.sh 설계 완성
+- [x] [문제4] tdd-enforcer.sh 설계 완성
       A. SCALE 기반 활성화 ([에이전트5] /init-project + [스킬1-C]와 연동)
          SCALE=1 → hooks-strict.flag 생성 안 함 (TDD 비강제)
          SCALE=2 → 인터뷰 "TDD 강제 활성화하시겠습니까?" Y → hooks-strict.flag 생성
@@ -174,7 +174,7 @@
 - [x] [주의2] executor.py --timeout 옵션 추가 (완료)
       사용: python executor.py --plan ... --timeout 600  (기본값: 300초)
 
-- [ ] [주의3] lint-test-build.sh / sub-agent-review.sh SCALE 기반 활성화
+- [x] [주의3] lint-test-build.sh / sub-agent-review.sh SCALE 기반 활성화
       step-validator와 역할 분리 (중복 아님):
         lint-test-build.sh → git commit 전 빠른 로컬 가드 (즉시 피드백)
         step-validator     → ultrawork 완료 후 종합 검증 (비동기, 깊은 검토)
@@ -183,7 +183,7 @@
         SCALE=2 → 인터뷰: "커밋 전 lint/test 자동 실행? / PR 리뷰 서브에이전트?" Y → 활성
         SCALE=3 → 두 훅 자동 활성 (기본)
 
-- [ ] [주의4] architecture-guard.sh SCALE 기반 엄격 모드 설계
+- [x] [주의4] architecture-guard.sh SCALE 기반 엄격 모드 설계
       아키텍처 가드: 파일 저장 시 레이어 의존성 위반 자동 감지
         경고 모드(기본): 위반 감지 시 메시지만 출력, 저장 허용
         엄격 모드: 위반 감지 시 저장 차단 (hooks-strict.flag 존재 시)
@@ -196,13 +196,13 @@
 
 ### 5. 스킬 고도화
 
-- [ ] [스킬1-A] /init-project — git 전략 섹션 추가
+- [x] [스킬1-A] /init-project — git 전략 섹션 추가
       브랜치 전략 선택 (main only / feature / git flow), 원격 저장소 연결, .gitignore 자동 생성
 
-- [ ] [스킬1-B] /init-project — 양식 작성 후 보완 인터뷰 강화
+- [x] [스킬1-B] /init-project — 양식 작성 후 보완 인터뷰 강화
       양식 제출 후 모호/빈 항목 자동 감지 → 소크라테스식 추가 질문 → PRD 초안 생성
 
-- [ ] [스킬1-C] /init-project — 규모별 차별화 고도화
+- [x] [스킬1-C] /init-project — 규모별 차별화 고도화
       SCALE=1: code-reviewer + step-validator 생성, 브랜치 전략 없음, PR 없음
       SCALE=2: + feature/* 브랜치, PR 워크플로우, 훅 중간 강도
       SCALE=3: + main/develop/feature 3단계 브랜치, ADR 강제, 훅 최고 강도
@@ -210,13 +210,13 @@
 - [x] [스킬新] /PR 스킬 신규 작성
       staged → /commit → push → gh pr create 자동화 (push 전 confirm 필수)
 
-- [ ] [스킬7] ai-readiness-cartography 캐시 로직 추가
+- [x] [스킬7] ai-readiness-cartography 캐시 로직 추가
       파일 변경 없으면 재스캔 생략
 
-- [ ] [스킬8] improve-token-efficiency 캐시 로직 추가
+- [x] [스킬8] improve-token-efficiency 캐시 로직 추가
       새 세션 없으면 재분석 생략
 
-- [ ] [연결] ultrawork.md + CLAUDE.md — Plan 모드 실행 흐름 명시
+- [x] [연결] ultrawork.md + CLAUDE.md — Plan 모드 실행 흐름 명시
       독립 태스크 3개+ → /ultrawork / 1~2개 → /ralph / 단순 작업 → 직접 실행
 
 ---
