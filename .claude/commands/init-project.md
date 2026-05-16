@@ -901,11 +901,12 @@ docs/ref/session-state.md
 [SCALE=3인 경우에만 출력]
   ⚠️  팀 고유 차단 패턴이 있으면 아래 파일에 섹션을 추가하세요:
       .claude/hooks/pre-bash-guard.sh
-  [AI_READINESS_ACTIVE=1]
+
+[AI_READINESS_ACTIVE=1]
   AI-Readiness 주기 측정이 활성화되었습니다.
-  /schedule 로 등록하세요:
-    - 주 1회: /schedule weekly /ai-readiness-cartography
-    - 월 1회: /schedule monthly /ai-readiness-cartography
+  /schedule 스킬로 등록하세요:
+  [AI_READINESS_CYCLE=1]  → /schedule 명령으로 매주 월요일 /ai-readiness-cartography 실행 등록
+  [AI_READINESS_CYCLE=2]  → /schedule 명령으로 매월 1일 /ai-readiness-cartography 실행 등록
   git 커밋이 30일 이상 없으면 스케줄이 자동 일시정지됩니다.
 
 다음 단계:
